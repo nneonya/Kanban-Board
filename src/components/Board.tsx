@@ -29,9 +29,9 @@ const Board: React.FC = () => {
     <BoardWrapper>
       <BoardTitle>Kanban Dashboard</BoardTitle>
       <BoardContainer>
-        <Column title="To Do" color="#6a5acd" />
-        <Column title="In Progress" color="#ffa500" />
-        <Column title="Done" color="#2ecc71" />
+        <Column title="To Do" color="#6a5acd" columnId="todo" />
+        <Column title="In Progress" color="#ffa500" columnId="inProgress" />
+        <Column title="Done" color="#2ecc71" columnId="done" />
       </BoardContainer>
     </BoardWrapper>
   );
