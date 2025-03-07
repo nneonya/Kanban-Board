@@ -1,9 +1,16 @@
-import './App.css'
+import React from "react";
+import Board from "./components/Board/index";
+import { ThemeProvider } from "styled-components";
+import theme from "./styles/theme";
+import GlobalStyles from "./styles/globalStyles";
 
-import Board from "./components/Board";
+const App: React.FC = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <Board />
+    </ThemeProvider>
+  );
+};
 
-  function App() {
-    return <Board />;
-  }
-
-export default App
+export default App;
