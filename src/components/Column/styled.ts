@@ -19,7 +19,7 @@ export const ColumnHeader = styled.div<{ color: string }>`
   color: white;
   font-weight: normal;
   padding: 5px;
-  gap: ${({ theme }) => theme.spacing.small}; /* Добавляем небольшой отступ */
+  gap: ${({ theme }) => theme.spacing.small};
 `;
 
 export const TaskCount = styled.div`
@@ -38,6 +38,7 @@ export const TaskCount = styled.div`
 export const AddButton = styled.button`
   background: transparent;
   border: none;
+  margin-bottom: 5px;
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fontSize.large};
   margin-left: auto;
@@ -115,4 +116,60 @@ export const AddTaskButton = styled.button<{ color: string }>`
     align-items: center;
     justify-content: center;
   }
+`;
+export const DeleteButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.small};
+  margin-bottom: 5px;
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fontSize.large};
+  cursor: pointer;
+`;
+
+export const EditInput = styled.input`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  outline: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 7px;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.white}; 
+`;
+
+export const ColorInput = styled.input`
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  width: 40px;
+`;
+
+export const SaveButton = styled.button`
+  padding: 5px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+`;
+
+export const EditButton = styled.button`
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  transform: scaleX(-1);
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fontSize.medium};
+  cursor: pointer;
+  gap: ${({ theme }) => theme.spacing.small};
+  align-items: center;
+  justify-content: center;
+
 `;

@@ -1,29 +1,39 @@
 import React, { useState, useEffect } from "react";
-import Task from "../Task"; 
+import Task from "../Task";
 import {
   ColumnContainer,
   ColumnHeader,
   TaskCount,
   AddButton,
   AddTaskButton,
-} from "./styled"; 
+  DeleteButton,
+  EditInput,
+  ColorInput,
+  SaveButton,
+  EditButton,
+} from "./styled";
 
 interface TaskItem {
   id: string;
   title: string;
   description: string;
   priority?: "High" | "Medium" | "Low";
-  isNew?: boolean; 
+  isNew?: boolean;
 }
 
 interface ColumnProps {
   title: string;
   color: string;
   columnId: string;
+  onDelete: () => void;
+  onEdit: (columnId: string, newTitle: string, newColor: string) => void;
 }
 
-const Column: React.FC<ColumnProps> = ({ title, color, columnId }) => {
+const Column: React.FC<ColumnProps> = ({ title, color, columnId, onDelete, onEdit }) => {
   const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(title);
+  const [newColor, setNewColor] = useState(color);
 
   useEffect(() => {
     const storedTasks = localStorage.getItem(`tasks_${columnId}`);
@@ -42,7 +52,7 @@ const Column: React.FC<ColumnProps> = ({ title, color, columnId }) => {
       title: "New Task",
       description: "Task description",
       priority: "Medium",
-      isNew: true, 
+      isNew: true,
     };
     setTasks([...tasks, newTask]);
   };
@@ -54,19 +64,35 @@ const Column: React.FC<ColumnProps> = ({ title, color, columnId }) => {
   const editTask = (taskId: string, title: string, description: string, priority?: "High" | "Medium" | "Low") => {
     setTasks(
       tasks.map((task) =>
-        task.id === taskId
-          ? { ...task, title, description, priority, isNew: false }
-          : task
+        task.id === taskId ? { ...task, title, description, priority, isNew: false } : task
       )
     );
   };
 
+  const handleSaveEdit = () => {
+    onEdit(columnId, newTitle, newColor);
+    setIsEditing(false);
+  };
+
   return (
     <ColumnContainer>
-      <ColumnHeader color={color}>
-        <TaskCount>{tasks.length}</TaskCount>
-        <span>{title}</span>
-        <AddButton onClick={addTask}>+</AddButton>
+      <ColumnHeader color={newColor}>
+        {isEditing ? (
+          <>
+            <EditInput value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
+            <ColorInput type="color" value={newColor} onChange={(e) => setNewColor(e.target.value)} />
+            <SaveButton onClick={handleSaveEdit}>Save</SaveButton>
+          </>
+        ) : (
+          <>
+            <TaskCount>{tasks.length}</TaskCount>
+            <span>{title}</span>
+           
+            <EditButton onClick={() => setIsEditing(true)}>✎</EditButton>
+            <DeleteButton onClick={onDelete}>×</DeleteButton>
+            <AddButton onClick={addTask}>+</AddButton>
+          </>
+        )}
       </ColumnHeader>
 
       {tasks.map((task) => (
@@ -81,7 +107,7 @@ const Column: React.FC<ColumnProps> = ({ title, color, columnId }) => {
           onEdit={editTask}
         />
       ))}
-      <AddTaskButton color={color} onClick={addTask}>
+      <AddTaskButton color={newColor} onClick={addTask}>
         <span>Add task...</span>
       </AddTaskButton>
     </ColumnContainer>

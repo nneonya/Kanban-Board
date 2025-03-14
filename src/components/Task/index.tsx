@@ -8,20 +8,20 @@ import {
   DeleteIcon,
   EditableText,
   SaveButton,
-} from "./styled"; // Импортируем стили
+} from "./styled";
 
 interface TaskProps {
   id: string;
   title: string;
   description: string;
   priority?: "High" | "Medium" | "Low";
-  isNew?: boolean; // Добавили флаг для новых задач
+  isNew?: boolean; 
   onDelete: () => void;
   onEdit: (id: string, title: string, description: string, priority?: "High" | "Medium" | "Low") => void;
 }
 
 const Task: React.FC<TaskProps> = ({ id, title, description, priority, isNew, onDelete, onEdit }) => {
-  const [isEditing, setIsEditing] = useState(!!isNew); // Только новая задача будет открыта для редактирования
+  const [isEditing, setIsEditing] = useState(!!isNew);
   const [newTitle, setNewTitle] = useState(title);
   const [newDescription, setNewDescription] = useState(description);
   const [newPriority, setNewPriority] = useState(priority);
@@ -46,7 +46,6 @@ const Task: React.FC<TaskProps> = ({ id, title, description, priority, isNew, on
             </select>
           </div>
           <TaskTitle>
-            
             <EditableText
               contentEditable
               suppressContentEditableWarning
@@ -65,7 +64,6 @@ const Task: React.FC<TaskProps> = ({ id, title, description, priority, isNew, on
           >
             {newDescription}
           </TaskDescription>
-          
           <SaveButton onClick={handleSaveEdit}>Save</SaveButton>
         </>
       ) : (
@@ -86,3 +84,4 @@ const Task: React.FC<TaskProps> = ({ id, title, description, priority, isNew, on
 };
 
 export default Task;
+
