@@ -9,13 +9,14 @@ const theme: DefaultTheme = {
     white: "#ffffff",
     border: "#E2E8F0",
     priorityHigh: "#ff4d4d",
-    priorityHighTransparent: "rgba(255, 77, 77, 0.15)", 
+    priorityHighTransparent: "#ff4d4d26", 
     priorityMedium: "#4d79ff",
-    priorityMediumTransparent: "rgba(77, 121, 255, 0.15)",
+    priorityMediumTransparent: "#4d79ff26",
     priorityLow: "#2ecc71",
-    priorityLowTransparent: "rgba(46, 204, 113, 0.15)", 
+    priorityLowTransparent: "#2ecc7126", 
   },
   spacing: {
+    extraSmall: "5px",
     small: "10px",
     medium: "16px",
     large: "32px",
@@ -32,7 +33,7 @@ const theme: DefaultTheme = {
     medium: "16px",
     large: "24px",
   },
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  boxShadow: "0 2px 4px #00000019",
 };
 
 export default theme;

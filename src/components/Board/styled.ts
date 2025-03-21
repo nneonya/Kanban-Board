@@ -14,6 +14,9 @@ export const BoardContainer = styled.div`
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.medium};
   padding: ${({ theme }) => theme.spacing.large};
+  flex-wrap: wrap; 
+  width: 100%;
+  max-width: 100%;
 `;
 
 export const BoardTitle = styled.h1`
@@ -40,6 +43,7 @@ export const AddButton = styled.button`
   width: 40px;
   height: 40px;
   font-size: ${({ theme }) => theme.fontSize.large};
+  padding-bottom: ${({ theme }) => theme.spacing.extraSmall};
   display: flex;
   align-items: center;
   justify-content: center;

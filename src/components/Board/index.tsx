@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store";
+import { addColumn, deleteColumn, editColumn } from "@/store/reducers/columnsReducer";
+import { moveTask } from "@/store/reducers/tasksReducer"; 
+import Column from "@components/Column";
 import { ThemeProvider } from "styled-components";
-import Column from "../Column";
-import theme from "../../styles/theme";
-import { COLUMNS } from "../../constants";
+import theme from "@/styles/theme";
+import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd"; 
 import {
   BoardWrapper,
   BoardContainer,
@@ -11,59 +15,66 @@ import {
   AddButton,
 } from "./styled";
 
-interface ColumnData {
-  id: string;
-  title: string;
-  color: string;
-}
-
 const Board: React.FC = () => {
-  const [columns, setColumns] = useState<ColumnData[]>(COLUMNS);
+  const dispatch = useDispatch();
+  const columns = useSelector((state: RootState) => state.columns.columns);
 
-  const handleAddColumn = () => {
-    const newColumn = {
-      id: Date.now().toString(),
-      title: "New Column",
-      color: "red",
-    };
-    setColumns([...columns, newColumn]);
-  };
+  const onDragEnd = (result: DropResult) => { 
+    const { destination, source, draggableId } = result;
 
-  const handleDeleteColumn = (columnId: string) => {
-    setColumns(columns.filter((column) => column.id !== columnId));
-  };
+    if (!destination) {
+      return;
+    }
 
-  const handleEditColumn = (columnId: string, newTitle: string, newColor: string) => {
-    setColumns(
-      columns.map((column) =>
-        column.id === columnId ? { ...column, title: newTitle, color: newColor } : column
-      )
-    );
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    dispatch(moveTask({
+      sourceColumnId: source.droppableId,
+      destinationColumnId: destination.droppableId,
+      sourceIndex: source.index,
+      destinationIndex: destination.index,
+      taskId: draggableId,
+    }));
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <BoardWrapper>
-        <BoardTitle>
-          Kanban Dashboard
-          <AddButtonWrapper>
-            <AddButton onClick={handleAddColumn}>+</AddButton>
-          </AddButtonWrapper>
-        </BoardTitle>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <BoardWrapper>
+          <BoardTitle>
+            Kanban Dashboard
+            <AddButtonWrapper>
+              <AddButton onClick={() => dispatch(addColumn())}>+</AddButton>
+            </AddButtonWrapper>
+          </BoardTitle>
 
-        <BoardContainer>
-          {columns.map((column) => (
-            <Column
-              key={column.id}
-              title={column.title}
-              color={column.color}
-              columnId={column.id}
-              onDelete={() => handleDeleteColumn(column.id)}
-              onEdit={handleEditColumn}
-            />
-          ))}
-        </BoardContainer>
-      </BoardWrapper>
+          <Droppable droppableId="all-columns" direction="horizontal" type="column">
+            {(provided) => (
+              <BoardContainer {...provided.droppableProps} ref={provided.innerRef}>
+                {columns.map((column, index) => (
+                  <Column
+                    key={column.id}
+                    title={column.title}
+                    color={column.color}
+                    columnId={column.id}
+                    index={index}
+                    onDelete={() => dispatch(deleteColumn(column.id))}
+                    onEdit={(columnId, newTitle, newColor) =>
+                      dispatch(editColumn({ columnId, newTitle, newColor }))
+                    }
+                  />
+                ))}
+                {provided.placeholder}
+              </BoardContainer>
+            )}
+          </Droppable>
+        </BoardWrapper>
+      </DragDropContext>
     </ThemeProvider>
   );
 };

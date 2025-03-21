@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from "react";
-import Task from "../Task";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store";
+import { addTask, deleteTask, editTask } from "@/store/reducers/tasksReducer";
+import Task from "@components/Task";
+import { Droppable } from "@hello-pangea/dnd";
 import {
   ColumnContainer,
   ColumnHeader,
@@ -13,60 +17,43 @@ import {
   EditButton,
 } from "./styled";
 
-interface TaskItem {
-  id: string;
-  title: string;
-  description: string;
-  priority?: "High" | "Medium" | "Low";
-  isNew?: boolean;
-}
-
 interface ColumnProps {
   title: string;
   color: string;
   columnId: string;
+  index: number;
   onDelete: () => void;
   onEdit: (columnId: string, newTitle: string, newColor: string) => void;
 }
 
-const Column: React.FC<ColumnProps> = ({ title, color, columnId, onDelete, onEdit }) => {
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
+const Column: React.FC<ColumnProps> = ({ title, color, columnId, index, onDelete, onEdit }) => {
+  const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.tasks[columnId] || []);
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
   const [newColor, setNewColor] = useState(color);
 
-  useEffect(() => {
-    const storedTasks = localStorage.getItem(`tasks_${columnId}`);
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
-    }
-  }, [columnId]);
-
-  useEffect(() => {
-    localStorage.setItem(`tasks_${columnId}`, JSON.stringify(tasks));
-  }, [tasks, columnId]);
-
-  const addTask = () => {
-    const newTask: TaskItem = {
-      id: Date.now().toString(),
-      title: "New Task",
-      description: "Task description",
-      priority: "Medium",
-      isNew: true,
-    };
-    setTasks([...tasks, newTask]);
-  };
-
-  const deleteTask = (taskId: string) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
-  };
-
-  const editTask = (taskId: string, title: string, description: string, priority?: "High" | "Medium" | "Low") => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, title, description, priority, isNew: false } : task
-      )
+  const handleAddTask = () => {
+    dispatch(
+      addTask({
+        columnId,
+        task: {
+          id: Date.now().toString(),
+          title: "New Task",
+          description: "Task description",
+          priority: "Medium",
+          isNew: true,
+        },
+      })
     );
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    dispatch(deleteTask({ columnId, taskId }));
+  };
+
+  const handleEditTask = (taskId: string, title: string, description: string, priority?: "High" | "Medium" | "Low") => {
+    dispatch(editTask({ columnId, taskId, title, description, priority }));
   };
 
   const handleSaveEdit = () => {
@@ -87,27 +74,36 @@ const Column: React.FC<ColumnProps> = ({ title, color, columnId, onDelete, onEdi
           <>
             <TaskCount>{tasks.length}</TaskCount>
             <span>{title}</span>
-           
             <EditButton onClick={() => setIsEditing(true)}>✎</EditButton>
             <DeleteButton onClick={onDelete}>×</DeleteButton>
-            <AddButton onClick={addTask}>+</AddButton>
+            <AddButton onClick={handleAddTask}>+</AddButton>
           </>
         )}
       </ColumnHeader>
 
-      {tasks.map((task) => (
-        <Task
-          key={task.id}
-          id={task.id}
-          title={task.title}
-          description={task.description}
-          priority={task.priority}
-          isNew={task.isNew}
-          onDelete={() => deleteTask(task.id)}
-          onEdit={editTask}
-        />
-      ))}
-      <AddTaskButton color={newColor} onClick={addTask}>
+      <Droppable droppableId={columnId}>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {tasks.map((task, index) => (
+              <Task
+                key={task.id}
+                id={task.id}
+                title={task.title}
+                description={task.description}
+                priority={task.priority}
+                isNew={task.isNew}
+                columnId={columnId}
+                index={index}
+                onDelete={() => handleDeleteTask(task.id)}
+                onEdit={handleEditTask}
+              />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+
+      <AddTaskButton color={newColor} onClick={handleAddTask}>
         <span>Add task...</span>
       </AddTaskButton>
     </ColumnContainer>

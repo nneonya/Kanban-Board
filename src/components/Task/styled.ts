@@ -6,6 +6,7 @@ export const TaskContainer = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.medium};
   border: 1px solid ${({ theme }) => theme.colors.border};
   padding: ${({ theme }) => theme.spacing.small};
+  margin: ${({ theme }) => theme.spacing.small};
   box-shadow: ${({ theme }) => theme.boxShadow};
   display: flex;
   flex-direction: column;
@@ -16,17 +17,16 @@ export const PriorityBadge = styled.span<{ priority?: string }>`
   font-size: ${({ theme }) => theme.fontSize.extraSmall};
   padding: ${({ theme }) => `${theme.spacing.small} ${theme.spacing.medium}`};
   border-radius: ${({ theme }) => theme.borderRadius.large};
-
   padding: 4px 8px;
   color: ${({ priority, theme }) =>
-  priority === "High" ? theme.colors.priorityHigh :
-  priority === "Medium" ? theme.colors.priorityMedium :
-  theme.colors.priorityLow};
-background-color: ${({ priority, theme }) =>
-  priority === "High" ? theme.colors.priorityHighTransparent :
-  priority === "Medium" ? theme.colors.priorityMediumTransparent :
-  theme.colors.priorityLowTransparent};
-align-self: flex-start;
+    priority === "High" ? theme.colors.priorityHigh :
+    priority === "Medium" ? theme.colors.priorityMedium :
+    theme.colors.priorityLow};
+  background-color: ${({ priority, theme }) =>
+    priority === "High" ? theme.colors.priorityHighTransparent :
+    priority === "Medium" ? theme.colors.priorityMediumTransparent :
+    theme.colors.priorityLowTransparent};
+  align-self: flex-start;
 `;
 
 export const TaskTitle = styled.h3`
@@ -36,6 +36,10 @@ export const TaskTitle = styled.h3`
   justify-content: space-between;
   align-items: center;
   color: ${({ theme }) => theme.colors.textPrimary};
+
+  @media (max-width: 390px) {
+    font-size: ${({ theme }) => theme.fontSize.small};
+  }
 `;
 
 export const TaskDescription = styled.p`
@@ -76,6 +80,7 @@ export const EditableText = styled.span`
   font-weight: inherit;
   padding: 0;
 `;
+
 export const SaveButton = styled.button`
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.textSecondary};

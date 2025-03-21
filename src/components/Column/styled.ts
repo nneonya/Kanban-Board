@@ -18,13 +18,13 @@ export const ColumnHeader = styled.div<{ color: string }>`
   background-color: ${({ color }) => color};
   color: white;
   font-weight: normal;
-  padding: 5px;
+  padding: ${({ theme }) => theme.spacing.extraSmall};
   gap: ${({ theme }) => theme.spacing.small};
 `;
 
 export const TaskCount = styled.div`
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.small};
@@ -33,12 +33,13 @@ export const TaskCount = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  margin-left: 2px;
 `;
 
 export const AddButton = styled.button`
   background: transparent;
   border: none;
-  margin-bottom: 5px;
+  margin-bottom: ${({ theme }) => theme.spacing.extraSmall};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fontSize.large};
   margin-left: auto;
@@ -109,7 +110,7 @@ export const AddTaskButton = styled.button<{ color: string }>`
   span {
     background-color: ${({ color }) => color + "25"};
     color: ${({ color }) => color};
-    padding: 4px 8px;
+    padding: ${({ theme }) => theme.spacing.small};
     border-radius: 20px;
     font-size: ${({ theme }) => theme.fontSize.extraSmall};
     display: inline-flex;
@@ -117,12 +118,13 @@ export const AddTaskButton = styled.button<{ color: string }>`
     justify-content: center;
   }
 `;
+
 export const DeleteButton = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.small};
-  margin-bottom: 5px;
+  margin-bottom: ${({ theme }) => theme.spacing.extraSmall};
   background: transparent;
   border: none;
   color: ${({ theme }) => theme.colors.white};
@@ -135,25 +137,24 @@ export const EditInput = styled.input`
   flex-direction: column;
   align-items: center;
   min-width: 0;
-  outline: none;
   border: none;
   background: transparent;
   color: inherit;
   font-size: inherit;
   font-weight: inherit;
   margin: 7px;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.white}; 
+  border-bottom: 2px solid ${({ theme }) => theme.colors.white};
 `;
 
 export const ColorInput = styled.input`
-  padding: 5px;
+  padding: ${({ theme }) => theme.spacing.extraSmall};
   border-radius: 5px;
   border: none;
   width: 40px;
 `;
 
 export const SaveButton = styled.button`
-  padding: 5px;
+  padding: ${({ theme }) => theme.spacing.extraSmall};
   border: none;
   border-radius: 15px;
   cursor: pointer;
@@ -171,5 +172,4 @@ export const EditButton = styled.button`
   gap: ${({ theme }) => theme.spacing.small};
   align-items: center;
   justify-content: center;
-
 `;
